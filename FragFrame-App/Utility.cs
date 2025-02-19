@@ -25,6 +25,7 @@ namespace FragFrame
 
         public static string FindCS2()
         {
+            // TODO: allow CS2 to be installed in other locations ^^'
             return "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Global Offensive\\game\\bin\\win64\\cs2.exe";
         }
     }

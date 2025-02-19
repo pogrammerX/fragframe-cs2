@@ -32,8 +32,6 @@ namespace FragFrame
             StartButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(108, 43, 217);
             StartButton.Location = new Point((SideBar.Width / 2) - (StartButton.Width / 2), StartButton.Location.Y); // Center the Button, cuz im too lazy to do the math
             StartButton.Region = Region.FromHrgn(GDI32.CreateRoundRectRgn(0, 0, StartButton.Width, StartButton.Height, 8, 8));
-
-
         }
 
         private void StartButton_Click(object sender, EventArgs e)
@@ -49,7 +47,7 @@ namespace FragFrame
 
 
                 int pid = Loader.StartGame();
-                Loader.InjectDll(pid, "C:\\Users\\pogrammerX\\source\\repos\\FragFrame\\x64\\Debug\\fragframe-cs2.dll");
+                Loader.InjectDll(pid, PathUtility.GetBasePath() + "\\fragframe-cs2.dll");
                 Thread.Sleep(3200);
                 Environment.Exit(0);
             }).Start();

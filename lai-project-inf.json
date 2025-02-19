@@ -1,5 +1,9 @@
 {
     "assets": "https://github.com/pogrammerX/fragframe-cs2/releases/download/assets/assets.zip",
+<<<<<<< HEAD
     "binaries": "https://github.com/pogrammerX/fragframe-cs2/releases/download/releases/binaries.zip",
+=======
+    "binaries": "",
+>>>>>>> 29075a523cb41ff7b77d351db79803b65e145f40
     "version": "1.0"
 }

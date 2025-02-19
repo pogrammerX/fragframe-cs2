@@ -1,0 +1,7 @@
+C:\Users\pogrammerX\source\repos\FragFrame\FragFrame-Installer\bin\Release\net8.0-windows\publish\win-x64\fragframe-installer-win64.pdb
+C:\Users\pogrammerX\source\repos\FragFrame\FragFrame-Installer\bin\Release\net8.0-windows\publish\win-x64\D3DCompiler_47_cor3.dll
+C:\Users\pogrammerX\source\repos\FragFrame\FragFrame-Installer\bin\Release\net8.0-windows\publish\win-x64\PenImc_cor3.dll
+C:\Users\pogrammerX\source\repos\FragFrame\FragFrame-Installer\bin\Release\net8.0-windows\publish\win-x64\PresentationNative_cor3.dll
+C:\Users\pogrammerX\source\repos\FragFrame\FragFrame-Installer\bin\Release\net8.0-windows\publish\win-x64\vcruntime140_cor3.dll
+C:\Users\pogrammerX\source\repos\FragFrame\FragFrame-Installer\bin\Release\net8.0-windows\publish\win-x64\wpfgfx_cor3.dll
+C:\Users\pogrammerX\source\repos\FragFrame\FragFrame-Installer\bin\Release\net8.0-windows\publish\win-x64\fragframe-installer-win64.exe
