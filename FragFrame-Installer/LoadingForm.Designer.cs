@@ -85,6 +85,7 @@
             Controls.Add(pictureBox1);
             ForeColor = Color.White;
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "LoadingForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Loading...";

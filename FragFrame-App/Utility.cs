@@ -19,7 +19,6 @@ namespace FragFrame
         public static string GetBasePath()
         {
             string res = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-            MessageBox.Show(res);
             return res;
         }
 
