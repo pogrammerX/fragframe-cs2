@@ -1,5 +1,5 @@
 {
-    "assets": "",
-    "binaries": "",
+    "assets": "https://github.com/pogrammerX/fragframe-cs2/releases/download/assets/assets.zip",
+    "binaries": "https://github.com/pogrammerX/fragframe-cs2/releases/download/releases/binaries.zip",
     "version": "1.0"
 }
