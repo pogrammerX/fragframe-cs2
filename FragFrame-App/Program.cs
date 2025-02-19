@@ -12,7 +12,7 @@ namespace FragFrame
 
             Directory.SetCurrentDirectory(PathUtility.GetBasePath());
 
-            AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
+            //AppDomain.CurrentDomain.UnhandledException += ExceptionHandler;
 
             using (HttpClient http = new())
             {
