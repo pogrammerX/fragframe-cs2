@@ -107,6 +107,13 @@ namespace FragFrame.Installer
 
                     appShortcutToDesktop("FragFrame", endDir + "\\bin-x64\\ffapp.exe");
                 }
+
+                lf.Invoke(() =>
+                {
+                    lf.TopMost = false;
+                    MessageBox.Show("FragFrame has been installed!", "FragFrame Installer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Environment.Exit(0);
+                });
             }).Start();
         }
     }

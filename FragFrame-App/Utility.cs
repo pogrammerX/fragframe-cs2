@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,10 +18,9 @@ namespace FragFrame
         /// </summary>
         public static string GetBasePath()
         {
-            Assembly Assembly = Assembly.GetEntryAssembly();
-            string Path = Assembly.Location;
-            Path = Path.Substring(0, Path.LastIndexOf('\\')); // We only work on Windows, so we're assuming "\" as the escape character
-            return Path;
+            string res = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+            MessageBox.Show(res);
+            return res;
         }
 
         public static string FindCS2()
