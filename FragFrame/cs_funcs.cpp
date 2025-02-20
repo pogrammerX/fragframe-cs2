@@ -165,3 +165,10 @@ int C_CSGameRules::GetRoundTimeLeft() {
 int C_CSGameRules::GetRound() {
 	return m_totalRoundsPlayed() + 1;
 }
+
+C_CSWeaponBase* C_CSPlayerPawn::GetWeapon() {
+	if (!m_pWeaponServices())
+		return nullptr;
+
+	return CSData::g_pGameEntitySystem->Get<C_CSWeaponBase>(m_pWeaponServices()->m_hActiveWeapon());
+}

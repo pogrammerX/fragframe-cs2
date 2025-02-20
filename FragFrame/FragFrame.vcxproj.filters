@@ -120,6 +120,9 @@
     <ClCompile Include="Animation.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="PanoramaImpl.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc.h">
@@ -247,6 +250,12 @@
     </ClInclude>
     <ClInclude Include="Animation.h">
       <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="PanoramaImpl.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="crosshair_png.h">
+      <Filter>3rdparty</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

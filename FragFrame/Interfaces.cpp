@@ -66,3 +66,19 @@ void CPanoramaUIEngine::RunScriptOnMainMenuPanel(const char* script) {
 
 	engine->RunScript(panel->uiPanel, script);
 }
+
+CConVar* IEngineCVar::Find(FNV1A_t uHashedName)
+{
+	for (int i = CSData::g_pEngineCVar->listConvars.Head(); i != CSData::g_pEngineCVar->listConvars.InvalidIndex(); i = CSData::g_pEngineCVar->listConvars.Next(i))
+	{
+		CConVar* pConVar = CSData::g_pEngineCVar->listConvars.Element(i);
+		if (pConVar == nullptr)
+			continue;
+
+		if (FNV1A::Hash(pConVar->szName) == uHashedName)
+			return pConVar;
+	}
+
+	assert(false); // invalid convar name
+	return nullptr;
+}

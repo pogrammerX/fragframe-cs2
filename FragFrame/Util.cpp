@@ -132,3 +132,54 @@ PlayerData* GetPlayerDataFromPawn(C_CSPlayerPawn* pPawn) {
     }
     return nullptr;
 }
+
+struct VerticalSection {
+    float AltitudeMax;
+    float AltitudeMin;
+
+    VerticalSection(float flAltMax, float flAltMin) {
+        AltitudeMax = flAltMax;
+        AltitudeMin = flAltMin;
+    }
+
+    // Zero constructor for shitty unordered_map
+    VerticalSection() {
+        AltitudeMax = 0.f;
+        AltitudeMin = 0.f;
+    }
+};
+
+// Found in pak01_dir.vpk/resource/overviews/map.txt
+// This map has the "lower" sections for all of the Maps
+static std::unordered_map<FNV1A_t, VerticalSection> g_mLowerSections
+{
+    { 
+        FNV1A::HashConst("de_nuke"), 
+        VerticalSection{ -495.f, -10000.f }
+    },
+    { 
+        FNV1A::HashConst("de_train"), 
+        VerticalSection{ -50.f, -5000.f }
+    },
+    { 
+        FNV1A::HashConst("ar_baggage"), 
+        VerticalSection{ -5.f, -10000.f }
+    },
+    { 
+        FNV1A::HashConst("de_vertigo"), 
+        VerticalSection{ 11700.f, -10000.f }
+    }
+};
+
+bool IsPlayerOnLowerPartOfTheMap(C_CSPlayerPawn* pPawn) {
+    FNV1A_t uMapHash = FNV1A::Hash(CSData::g_pGlobalVars->GetMapName());
+    if (!g_mLowerSections.contains(uMapHash))
+        return false;
+
+    // z is height in source2 for some reason, why not use left handed coordinate system?
+    float flPlayerAltitude = pPawn->m_pGameSceneNode()->m_vecAbsOrigin().z;
+
+    VerticalSection MapLowerSection = g_mLowerSections[uMapHash];
+
+    return MapLowerSection.AltitudeMax >= flPlayerAltitude && MapLowerSection.AltitudeMin <= flPlayerAltitude;
+}

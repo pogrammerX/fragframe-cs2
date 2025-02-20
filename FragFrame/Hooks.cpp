@@ -275,12 +275,16 @@ namespace HookFuncs {
                     flCardOffset -= DrawPlayerCard(team2Players[pid], flDeltaTime, pDrawList, flCardOffset, pSpec ? team2Players[pid]->m_hPawn == pSpec->m_hPawn : false);
                 }
 
-                const char* szTerrorTeamName = "Na`Vi";
-                const char* szCounterTerrorTeamName = "Asstralis";
+                // Had these hardcoded, oopsies!
+                // Funny fun fact, if nobody ever joined T or CT team, then it will be nullptr and fuck everything up :3
+                const char* szTerrorTeamName = CSData::g_pTTeam->m_szTeamname();
+                const char* szCounterTerrorTeamName = CSData::g_pCTTeam->m_szTeamname();
 
                 DrawHeader(pDrawList, szTerrorTeamName, szCounterTerrorTeamName);
                 if(pSpec)
                     DrawSpecPlayer(pDrawList, pSpec, szTerrorTeamName, pSpec->m_nTeam == 0 ? Theme::colTerroristsColor : Theme::colCounterTerroristsColor);
+
+                DrawPanorama(pDrawList);
             }
 
             if (CSData::g_pGameRules->m_bFreezePeriod() && nFreezeTimeLeft > 3 && nRound == 1) {
@@ -289,10 +293,7 @@ namespace HookFuncs {
                 static float flLastImageUpdateTime = FLT_MIN;
                 static CAnimation TransitImageAnim{};
 
-                const char** pszMapName = (const char**)((uintptr_t)CSData::g_pGlobalVars + 0x180); // Offset is easy to find in Reclass, so its only half a war crime
-                const char* szMapName = *pszMapName;
-
-                FNV1A_t uMapHash = FNV1A::Hash(szMapName);
+                FNV1A_t uMapHash = FNV1A::Hash(CSData::g_pGlobalVars->GetMapName());
 
                 ID3D11ShaderResourceView* pSRV = nullptr;
                 ID3D11ShaderResourceView* pTransitSRV = nullptr;
@@ -353,6 +354,7 @@ namespace HookFuncs {
                         pDrawList->AddRectFilled(ImVec2{ 0.f, 0.f }, ImGui::GetIO().DisplaySize, ImColor(12, 12, 12)); // Make this less boring
                         int numEntries = 0;
                         float svalue = value;
+                        // Lord have mercy
                         if (svalue >= 3.9f && svalue < 4.1f)
                             numEntries = 1;
                         else if (svalue > 4.1f && svalue < 4.2f)
@@ -438,7 +440,7 @@ namespace HookFuncs {
                                 flFontSize,
                                 ImVec2(vecPos.x - setWidth * 0.5f, vecPos.y), // Adjust X and Y
                                 ImColor(255, 255, 255),
-                                "SET!"
+                                "SET"
                             );
                         }
 
@@ -496,9 +498,7 @@ namespace HookFuncs {
 
                         pDrawList->AddRectFilled(ImVec2{ 0.f, 0.f }, ImGui::GetIO().DisplaySize, ImColor(12, 12, 12, alpha)); // Make this less boring
                         // Calculate the number of additional "GO!" bars to add on the sides
-                        int numAdditionalBars = 8;
                         float goWidth = Fonts::g_pDefaultLarge->CalcTextSizeA(flFontSize, FLT_MAX, FLT_MAX, "GO!").x;
-                        float spacing = goWidth + 8.f; // Spacing between "GO!" bars
 
                         // Calculate the total height required for all text entries
                         float totalTextHeight = 7 * flFontSize;
@@ -509,13 +509,20 @@ namespace HookFuncs {
                         // Set the initial position for the first text entry
                         ImVec2 vecPos = ImVec2{ (ImGui::GetIO().DisplaySize.x * 0.5f), startY };
 
+                        // Calculate the number of additional "GO!" bars to add on the sides
+                        int numAdditionalBars = 11;
+                        float spacing = goWidth + 8.f; // Spacing between "GO!" bars
+
+                        // Force color to orange
+                        ImColor color = ImColor(209, 134, 0);
+
                         // Render the center "GO!" bars (5 in total)
                         for (int i = 0; i < 9; ++i) {
                             pDrawList->AddText(
                                 Fonts::g_pDefaultLargeItalic,
                                 flFontSize,
                                 ImVec2(vecPos.x - goWidth * 0.5f, vecPos.y + i * flFontSize), // Center horizontally
-                                ImColor(209, 134, 0, alpha),
+                                color,
                                 "GO!"
                             );
                         }
@@ -530,7 +537,7 @@ namespace HookFuncs {
                                         Fonts::g_pDefaultLargeItalic,
                                         flFontSize,
                                         ImVec2(vecPos.x - goWidth * 0.5f + xOffset, vecPos.y + i * flFontSize), // Center horizontally
-                                        ImColor(209, 134, 0, alpha),
+                                        color,
                                         "GO!"
                                     );
                                 }
@@ -603,6 +610,15 @@ namespace HookFuncs {
 
         FFState::g_StartAnimation.m_bPlaying = false; // Easiest way to reset it
 
+        CSData::g_pEngineCVar->Find(FNV1A::HashConst("cl_obs_interp_enable"))->value.i1 = false; // Disable interpolation on the Observer's camera
+        CSData::g_pEngineCVar->Find(FNV1A::HashConst("cl_draw_only_deathnotices"))->value.i1 = true; // Only render the deathnotices, and not the entire HUD
+        CSData::g_pEngineCVar->Find(FNV1A::HashConst("cl_drawhud_force_teamid_overhead"))->value.i1 = true; // Force it to true to keep the overhead names
+        CSData::g_pEngineCVar->Find(FNV1A::HashConst("cl_teamid_overhead_mode"))->value.i32 = 2; // Only show name and HP
+
+        // We use our own crosshair, don't render the person's one
+        CSData::g_pEngineCVar->Find(FNV1A::HashConst("cl_show_observer_crosshair"))->value.i32 = 0;
+        CSData::g_pEngineCVar->Find(FNV1A::HashConst("crosshair"))->value.i1 = false;
+
         if (!g_pHooks->LevelInit.IsOk())
             return nullptr;
 
@@ -615,6 +631,7 @@ namespace HookFuncs {
 	__int64 __fastcall LevelShutdown(void* pClientModeShared) {
         // Null out all of the fields
 		CSData::g_arrPlayers = std::vector<C_CSPlayerPawn*>{};
+        g_arrDataPlayers.clear();
 		CSData::g_pGameEntitySystem = nullptr;
 		CSData::g_pGameRules = nullptr;
 		CSData::g_pGlobalVars = nullptr;
@@ -657,7 +674,7 @@ namespace HookFuncs {
             pData->m_hController = CBaseHandle(0);
             pData->m_szName = nullptr;
 
-            // jhow about we get ZeroMemory or memset in this fucker?
+            // how about we get ZeroMemory or memset in this fucker?
             pData->m_hPawn = hHandle;
             pData->m_iDeaths = 0;
             pData->m_iKills = 0;
@@ -861,21 +878,26 @@ namespace HookFuncs {
             }
         }
 
-        if (nStage == FRAME_SIMULATE_END) {
-            if (CSData::g_pTargetSpectatorOverride) {
-                CBaseHandle hTarget = *CSData::g_pTargetSpectatorOverride;
+        if (CSData::g_pLocalController) {
+            C_CSPlayerPawn* pLocalPawn = CSData::g_pGameEntitySystem->Get<C_CSPlayerPawn>(CSData::g_pLocalController->m_hPawn());
+            if (pLocalPawn) {
+                CPlayer_ObserverServices* pObserverServices = pLocalPawn->m_pObserverServices();
 
-                C_CSPlayerPawn* pTargetSpecatorPawn = CSData::g_pGameEntitySystem->Get<C_CSPlayerPawn>(hTarget);
-                if (pTargetSpecatorPawn) {
-                    C_CSPlayerPawn* pLocalPawn = CSData::g_pGameEntitySystem->Get<C_CSPlayerPawn>(CSData::g_pLocalController->m_hPawn());
-                    if (pLocalPawn) {
-                        CPlayer_ObserverServices* pObserverServices = pLocalPawn->m_pObserverServices();
+                if (pObserverServices) {
+                    if (nStage == FRAME_SIMULATE_END) {
+                        if (CSData::g_pTargetSpectatorOverride) {
+                            CBaseHandle hTarget = *CSData::g_pTargetSpectatorOverride;
 
-                        if (pObserverServices) {
                             // Modifying schema -- Oh noes!
                             pObserverServices->m_hObserverTarget() = hTarget;
                         }
                     }
+
+                    // Roaming isnt 3rdperson, but we treat it like that
+                    CSData::g_bSpectatorThirdPerson = pObserverServices->m_iObserverMode() == ObserverMode_t::OBS_MODE_CHASE ||
+                                                        pObserverServices->m_iObserverMode() == ObserverMode_t::OBS_MODE_ROAMING;
+
+                    CSData::g_pCurrentSpectatingPlayer = CSData::g_pGameEntitySystem->Get<C_CSPlayerPawn>(pObserverServices->m_hObserverTarget());
                 }
             }
         }
@@ -896,7 +918,6 @@ namespace HookFuncs {
         fnOriginal(pThis, nStage);
     }
 
-    // ImGui doesn't define this for import reasons
     LRESULT WindowProc(HWND hWindow, UINT uMessage, WPARAM wParam, LPARAM lParam) {
         ImGui_ImplWin32_WndProcHandler(hWindow, uMessage, wParam, lParam);
 

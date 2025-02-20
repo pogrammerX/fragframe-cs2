@@ -46,3 +46,4 @@
 #include "PlayerCard.h"
 #include "SpecPlayer.h"
 #include "MatchHeader.h"
+#include "PanoramaImpl.h"

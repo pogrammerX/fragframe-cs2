@@ -96,6 +96,12 @@ public:
 	int32_t m_nTickCount; //0x0048
 	MEM_PAD(0x8);
 	int m_nSomeInt;
+
+	const char* GetMapName() {
+		// Offset is easy to find in Reclass, so its only half a war crime
+		const char** pszMapName = (const char**)((uintptr_t)this + 0x180);
+		return *pszMapName;
+	}
 };
 
 class CEntityIdentity
@@ -586,6 +592,8 @@ public:
 			return m_pCollision()->CollisionMask();  // Collision + 0x38
 		return 0;
 	}
+
+	C_CSWeaponBase* GetWeapon();
 };
 
 class CUserCmdManager;

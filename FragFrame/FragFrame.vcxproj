@@ -154,6 +154,7 @@
     <ClCompile Include="Interfaces.cpp" />
     <ClCompile Include="MatchHeader.cpp" />
     <ClCompile Include="Memory.cpp" />
+    <ClCompile Include="PanoramaImpl.cpp" />
     <ClCompile Include="PlayerCard.cpp" />
     <ClCompile Include="qangle.cpp" />
     <ClCompile Include="Schema.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="const.h" />
+    <ClInclude Include="crosshair_png.h" />
     <ClInclude Include="cs_classes.h" />
     <ClInclude Include="Data.h" />
     <ClInclude Include="FNV1A.h" />
@@ -195,6 +197,7 @@
     <ClInclude Include="ischemasystem.h" />
     <ClInclude Include="MatchHeader.h" />
     <ClInclude Include="Memory.h" />
+    <ClInclude Include="PanoramaImpl.h" />
     <ClInclude Include="pe64.h" />
     <ClInclude Include="PlayerCard.h" />
     <ClInclude Include="qangle.h" />

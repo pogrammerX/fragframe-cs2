@@ -61,3 +61,5 @@ namespace Theme {
     static float flScoreFontSize = 54.f; // Font size for the Team score in the Header
     static float flTeamNameFontSize = 48.f; // Font size for the Team name in the Header
 }
+
+bool IsPlayerOnLowerPartOfTheMap(C_CSPlayerPawn* pPawn);

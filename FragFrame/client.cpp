@@ -16,9 +16,12 @@ namespace CSData {
     CGameEntitySystem* g_pGameEntitySystem;
     C_CSGameRules* g_pGameRules;
     CCSPlayerController* g_pLocalController;
+    C_CSPlayerPawn* g_pCurrentSpectatingPlayer;
+    bool g_bSpectatorThirdPerson;
     CPanoramaUIEngine* g_pPanoramaEngine;
     CBaseHandle* g_pTargetSpectatorOverride;
     CBaseFileSystem* g_pFileSystem;
+    IEngineCVar* g_pEngineCVar;
     IGlobalVars* g_pGlobalVars;
     ISchemaSystem* g_pSchemaSystem;
     IEngineClient* g_pEngineClient;
@@ -142,6 +145,32 @@ DWORD EntryThread(LPVOID) {
         g_mWeaponIcons.insert({ uWeaponIdHash, icon });
     }
 
+    for (const auto& dirEntry : std::filesystem::directory_iterator(FF_PATH"\\radar")) {
+        std::string szExtension = dirEntry.path().extension().string();
+        if (szExtension.find("png") == std::string::npos)
+            continue; // Who put some random ass file in our radar folder???
+
+        std::string szFilename = dirEntry.path().filename().string();
+
+        std::string szIdentifier = szFilename.substr(0, szFilename.find("_radar"));
+
+        FNV1A_t uIdHash = FNV1A::Hash(szIdentifier.c_str());
+
+        int w, h;
+        int comp;
+        const char* path = dirEntry.path().string().c_str();
+        stbi_uc* data = stbi_load(path, &w, &h, &comp, STBI_rgb_alpha);
+        int size = w * h * 4;
+        ID3D11ShaderResourceView* srv = CreateTexture(std::vector<uint8_t>{data, data + size}, w, h);
+        stbi_image_free(data);
+
+        if (!srv)
+            continue;
+
+        MEM::Msg(MEM::AcquireChannel("FragFrame"), ("Loaded radar image for " + szIdentifier).c_str(), CS_CLR_GREEN);
+        g_mRadarImages.insert({ uIdHash, srv });
+    }
+
     for (const auto& dirEntry : std::filesystem::directory_iterator(FF_PATH"\\maps")) {
         std::string szExtension = dirEntry.path().extension().string();
         if (szExtension.find("png") == std::string::npos)
@@ -213,6 +242,8 @@ BOOL WINAPI DllMain(
         CSData::g_pGlobalVars = *(IGlobalVars**)MEM::GetAbsoluteAddress(MEM::PatternScan(MEM::GetModuleBaseHandle("client.dll"), "48 89 15 ? ? ? ? 48 89 42"), 0x3); // dwGlobalVars
         CSData::g_pFileSystem = *(CBaseFileSystem**)MEM::GetAbsoluteAddress(MEM::PatternScan(MEM::GetModuleBaseHandle("client.dll"), "48 8B 0D ? ? ? ? 4C 8D 05 ? ? ? ? 48 8D 95 F0 00 00 00 48 8B 01 FF 90 80 01 00 00"), 0x3); // VFileSystem017
         CSData::g_pInputSystem = (IInputSystem*)MEM::GetAbsoluteAddress(MEM::PatternScan(MEM::GetModuleBaseHandle("inputsystem.dll"), "48 8B 05 ? ? ? ? 41 B0 ?"), 0x3); // InputSystemVersion001
+        // TODO: Sig this (VEngineCvar007) https://github.com/a2x/cs2-dumper/blob/main/output/interfaces.hpp#L213
+        CSData::g_pEngineCVar = (IEngineCVar*)((uintptr_t)MEM::GetModuleBaseHandle("tier0.dll") + 0x38E4B0); 
 
         // Hard to find!
         // X-Ref: "animdebugger" (CUtlBuffer::PutString((CUtlBuffer *)&v14, "animdebugger"); -> if statement)

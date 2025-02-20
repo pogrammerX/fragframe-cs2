@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("fragframe-installer-win64")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ab02640e21ddc0f584b0fa10bf1ccbb40a96d894")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c8daa1ffdf2e72217613b3478307e75700d2c106")]
 [assembly: System.Reflection.AssemblyProductAttribute("fragframe-installer-win64")]
 [assembly: System.Reflection.AssemblyTitleAttribute("fragframe-installer-win64")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
