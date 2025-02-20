@@ -222,7 +222,7 @@ namespace HookFuncs {
                 FFState::g_StartAnimation.m_flStart = 0.f;
                 FFState::g_StartAnimation.m_flEnd = 10.f;
                 FFState::g_StartAnimation.m_flSpeed = .16f; // for the love of god dont change this
-                // PlaySoundA(FF_PATH"sfx\\showdown.wav", NULL, SND_FILENAME | SND_ASYNC);
+                PlaySoundA(FF_PATH"sfx\\showdown.wav", NULL, SND_FILENAME | SND_ASYNC);
             }
             else {
                 std::vector<PlayerData*> team1Players{};
