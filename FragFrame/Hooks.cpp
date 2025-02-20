@@ -282,7 +282,7 @@ namespace HookFuncs {
 
                 DrawHeader(pDrawList, szTerrorTeamName, szCounterTerrorTeamName);
                 if(pSpec)
-                    DrawSpecPlayer(pDrawList, pSpec, szTerrorTeamName, pSpec->m_nTeam == 0 ? Theme::colTerroristsColor : Theme::colCounterTerroristsColor);
+                    DrawSpecPlayer(pDrawList, pSpec, pSpec->m_nTeam == 0 ? szTerrorTeamName : szCounterTerrorTeamName, pSpec->m_nTeam == 0 ? Theme::colTerroristsColor : Theme::colCounterTerroristsColor);
 
                 DrawPanorama(pDrawList);
             }
