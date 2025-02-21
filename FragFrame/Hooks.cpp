@@ -501,7 +501,7 @@ namespace HookFuncs {
                         float goWidth = Fonts::g_pDefaultLarge->CalcTextSizeA(flFontSize, FLT_MAX, FLT_MAX, "GO!").x;
 
                         // Calculate the total height required for all text entries
-                        float totalTextHeight = 7 * flFontSize;
+                        float totalTextHeight = 9 * flFontSize;
 
                         // Calculate the starting Y position to center the text vertically
                         float startY = (ImGui::GetIO().DisplaySize.y - totalTextHeight) * 0.5f;
@@ -514,7 +514,7 @@ namespace HookFuncs {
                         float spacing = goWidth + 8.f; // Spacing between "GO!" bars
 
                         // Force color to orange
-                        ImColor color = ImColor(209, 134, 0);
+                        ImColor color = ImColor(209, 134, 0, alpha);
 
                         // Render the center "GO!" bars (5 in total)
                         for (int i = 0; i < 9; ++i) {

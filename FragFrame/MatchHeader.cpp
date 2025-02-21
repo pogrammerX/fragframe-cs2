@@ -14,39 +14,59 @@ void DrawHeader(ImDrawList* pDrawList, const char* szTerrorTeamName, const char*
 
         // Round timer
         {
-            std::string szRoundTimerText = "";
-            ImColor colRoundTimerColor = Theme::colDefaultText;
-            if (CSData::g_pGameRules->m_bFreezePeriod()) {
-                colRoundTimerColor = ImColor(255, 0, 0);
-                int nRoundTimeLeft = CSData::g_pGameRules->GetFreezeTimeLeft();
+            if (CSData::g_pGameRules->m_bBombPlanted()) {
+                IconData_t Bomb = g_mWeaponIcons[FNV1A::HashConst("bomb_1024")];
 
-                int nMinutes = nRoundTimeLeft / 60; // Calculate minutes
-                int nSeconds = nRoundTimeLeft % 60; // Calculate remaining seconds
+                ImVec2 vecRealBombSize = ImVec2{ (float)Bomb.m_uWidth, (float)Bomb.m_uHeight };
+                vecRealBombSize = ScaleToHeight(vecRealBombSize, Theme::flRoundTimeFontSize * flCardScaling);
 
-                // Format minutes and seconds as two digits
-                szRoundTimerText = (nMinutes <= 9 ? "0" : "") + std::to_string(nMinutes) + ":" +
-                    (nSeconds <= 9 ? "0" : "") + std::to_string(nSeconds);
+                ImVec2 vecPos = vecHeaderPosition;
+                vecPos += ImVec2{
+                    (vecHeaderSize.x / 2.f) - (vecRealBombSize.x / 2.f),
+                    10.f
+                };
+
+                pDrawList->AddImage((ImTextureID)Bomb.m_pTex, vecPos, vecPos + vecRealBombSize, ImVec2{ 0.f, 0.f }, ImVec2{ 1.f, 1.f }, ImColor{ 1.f, 0.f, 0.f, 1.f });
             }
             else {
-                int nRoundTimeLeft = CSData::g_pGameRules->GetRoundTimeLeft();
+                std::string szRoundTimerText = "";
+                ImColor colRoundTimerColor = Theme::colDefaultText;
+                if (CSData::g_pGameRules->m_bFreezePeriod()) {
+                    colRoundTimerColor = ImColor(255, 0, 0);
+                    int nRoundTimeLeft = CSData::g_pGameRules->GetFreezeTimeLeft();
 
-                int nMinutes = nRoundTimeLeft / 60; // Calculate minutes
-                int nSeconds = nRoundTimeLeft % 60; // Calculate remaining seconds
+                    nRoundTimeLeft = std::min(0, nRoundTimeLeft);
 
-                // Format minutes and seconds as two digits
-                szRoundTimerText = (nMinutes <= 9 ? "0" : "") + std::to_string(nMinutes) + ":" +
-                    (nSeconds <= 9 ? "0" : "") + std::to_string(nSeconds);
+                    int nMinutes = nRoundTimeLeft / 60; // Calculate minutes
+                    int nSeconds = nRoundTimeLeft % 60; // Calculate remaining seconds
+
+                    // Format minutes and seconds as two digits
+                    szRoundTimerText = (nMinutes <= 9 ? "0" : "") + std::to_string(nMinutes) + ":" +
+                        (nSeconds <= 9 ? "0" : "") + std::to_string(nSeconds);
+                }
+                else {
+                    int nRoundTimeLeft = CSData::g_pGameRules->GetRoundTimeLeft();
+
+                    nRoundTimeLeft = std::min(0, nRoundTimeLeft);
+
+                    int nMinutes = nRoundTimeLeft / 60; // Calculate minutes
+                    int nSeconds = nRoundTimeLeft % 60; // Calculate remaining seconds
+
+                    // Format minutes and seconds as two digits
+                    szRoundTimerText = (nMinutes <= 9 ? "0" : "") + std::to_string(nMinutes) + ":" +
+                        (nSeconds <= 9 ? "0" : "") + std::to_string(nSeconds);
+                }
+
+                ImVec2 vecTextSize = Fonts::g_pDefaultSmallBold->CalcTextSizeA(Theme::flRoundTimeFontSize * flCardScaling, FLT_MAX, FLT_MAX, szRoundTimerText.c_str());
+
+                ImVec2 vecTextPos = vecHeaderPosition;
+                vecTextPos += ImVec2{
+                    (vecHeaderSize.x / 2.f) - (vecTextSize.x / 2.f),
+                    10.f
+                };
+
+                pDrawList->AddText(Fonts::g_pDefaultSmallBold, Theme::flRoundTimeFontSize * flCardScaling, vecTextPos, colRoundTimerColor, szRoundTimerText.c_str());
             }
-
-            ImVec2 vecTextSize = Fonts::g_pDefaultSmallBold->CalcTextSizeA(Theme::flRoundTimeFontSize * flCardScaling, FLT_MAX, FLT_MAX, szRoundTimerText.c_str());
-
-            ImVec2 vecTextPos = vecHeaderPosition;
-            vecTextPos += ImVec2{
-                (vecHeaderSize.x / 2.f) - (vecTextSize.x / 2.f),
-                10.f
-            };
-
-            pDrawList->AddText(Fonts::g_pDefaultSmallBold, Theme::flRoundTimeFontSize * flCardScaling, vecTextPos, colRoundTimerColor, szRoundTimerText.c_str());
         }
 
         // Round number

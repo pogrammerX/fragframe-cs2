@@ -162,7 +162,7 @@ void DrawSpecPlayer(ImDrawList* pDrawList, PlayerData* pSpec, const char* szTeam
         }
     }
     else {
-        std::string szDeathInfoText = std::to_string(pSpec->m_nDamageThisRound) + " DAMAGE THIS ROUND (" + std::to_string(pSpec->m_nKillsThisRound) + " KILLS)";
+        std::string szDeathInfoText = std::to_string(pSpec->m_nKillsThisRound) + " KILLS THIS ROUND";
         pDrawList->AddText(Fonts::g_pDefaultSmallItalic, flFontSize, vecFillStart + ImVec2{ (12.f * flCardScaling), 0.f }, Theme::colDefaultText, szDeathInfoText.c_str());
     }
 }
